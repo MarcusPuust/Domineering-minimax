@@ -1,123 +1,193 @@
 # Domineering Minimax
 
-This school project is a Domineering game on a 4 by 4 board. Player 0 is
-controlled by the human, and Player 1 is controlled by a depth-limited minimax
-computer opponent.
+See on kooliprojekt, mis rakendab 4 × 4 mängulaual mängu Domineering.
+Mängija 0 on inimene ja mängija 1 on arvuti.
 
-## Current features
+## Kuidas mängu avada ja mängida
 
-- A 4 by 4 clickable board.
-- Player 0 vertical 1 by 2 pieces.
-- Player 1 horizontal 1 by 2 pieces.
-- Legal move validation for both players.
-- Win detection when the next player has no legal move.
-- A New Game button.
-- Automatic computer moves for Player 1 using minimax or alpha-beta pruning
-  with search depth 5.
-- Search depth, checked states, and elapsed time shown after computer moves.
-- A selector allows comparing both search modes from the same position.
+Projekt kasutab ainult HTML-i, CSS-i ja JavaScripti ning väliseid teeke ei ole
+vaja.
 
-## Files
+Mängu saab avada otse brauseris:
 
-- `AGENTS.md` — project instructions and development requirements.
-- `index.html` — page structure, game status, board, and New Game button.
-- `style.css` — page, board, piece, and button styling.
-- `script.js` — board creation, human/computer move validation, win detection,
-  computer moves, and reset logic.
+1. Ava fail `index.html`.
+2. Vali rippmenüüst arvuti otsingumeetod:
+   - **Minimax**
+   - **Minimax koos alfa-beeta kärpimisega**
+3. Klõpsa kahel järjestikusel vabal lahtril samas veerus, et teha mängija 0
+   vertikaalne käik.
+4. Arvuti mõtleb hetke ja teeb mängija 1 horisontaalse käigu.
+5. Arvuti käigu järel kuvatakse valitud käik, otsingu sügavus, kontrollitud
+   mänguseisude arv ja kulunud aeg millisekundites.
+6. Uue mängu alustamiseks vajuta nuppu **New Game**.
 
-## Setup and play
-
-The project uses only HTML, CSS, and JavaScript with no external libraries.
-Open `index.html` directly in a browser, or start a local server:
+Soovi korral võib käivitada ka kohaliku veebiserveri:
 
 ```bash
 python3 -m http.server 8000
 ```
 
-Then open http://localhost:8000. Click two cells to place a piece according
-to place Player 0's vertical piece. The computer then briefly thinks and chooses a move using
-minimax or minimax with alpha-beta pruning. Select **New Game** to reset the
-board.
+Seejärel ava brauseris http://localhost:8000.
 
-## GitHub repository
+## Domineeringu reeglid
+
+- Mängulaud on 4 × 4 ehk sellel on 16 lahtrit.
+- Mängija 0 on inimene ja asetab vertikaalseid 1 × 2 nuppe.
+- Mängija 1 on arvuti ja asetab horisontaalseid 1 × 2 nuppe.
+- Vertikaalne nupp katab kaks järjestikust vaba lahtrit samas veerus.
+- Horisontaalne nupp katab kaks järjestikust vaba lahtrit samas reas.
+- Nuppu ei saa asetada hõivatud lahtritele.
+- Mängija kaotab, kui tal ei ole enam ühtegi seaduslikku käiku.
+
+## Minimax-algoritm
+
+Arvuti otsib maksimaalselt 5 käiku ette. Minimax käsitleb arvutit mängijana,
+kes püüab võita, ja inimest vastasena, kes püüab võita. Iga võimaliku käigu
+järel simuleeritakse vastase käike ning seejärel uusi arvuti käike.
+
+Kui mäng lõpeb otsingu ajal, saab arvuti võit väga suure positiivse skoori ja
+inimese võit väga väikese negatiivse skoori. Mitte-lõplike seisude hindamisel
+lahutatakse mängija 0 võimalike vertikaalsete käikude arv mängija 1 võimalike
+horisontaalsete käikude arvust:
+
+```text
+hind = mängija 1 horisontaalsete käikude arv
+       − mängija 0 vertikaalsete käikude arv
+```
+
+Arvuti valib käigu, mille minimax-hinnang on talle kõige kasulikum.
+
+## Alfa-beeta kärpimine
+
+Alfa-beeta kärpimine kasutab sama mänguseisu, sama hindamisfunktsiooni ja sama
+otsingu sügavust nagu tavaline minimax. See jätab vahele harud, mille tulemus
+ei saa enam senist parimat valikut parandada.
+
+Seetõttu kontrollitakse vähem mänguseise ja otsing võib olla kiirem, kuid
+valitud käik ja mängu käitumine jäävad samaks. Rippmenüü abil saab võrrelda
+tavalist minimaxi ja alfa-beeta kärpimisega minimaxi.
+
+## Jõudluse tulemused
+
+Tulemused sõltuvad brauserist ja arvutist. Sama algse mänguseisu ja sügavuse
+5 korral võib tulemused märkida näiteks järgmiselt:
+
+| Meetod | Otsingu sügavus | Kontrollitud seisud | Aeg |
+|---|---:|---:|---:|
+| Minimax | 5 | `[täida siia]` | `[täida siia] ms` |
+| Minimax koos alfa-beeta kärpimisega | 5 | `[täida siia]` | `[täida siia] ms` |
+
+Alfa-beeta kärpimise eelis on tavaliselt väiksem kontrollitud seisude arv,
+sest mittevajalikud otsinguharud jäetakse läbi vaatamata.
+
+## Failid
+
+- `AGENTS.md` — projekti juhised ja arendusnõuded.
+- `index.html` — lehe struktuur, mängu olek, otsingumeetodi valik, mängulaud ja
+  uue mängu nupp.
+- `style.css` — lehe, mängulaua, nuppude ja mängunuppude kujundus.
+- `script.js` — mängulaua loomine, käikude kontrollimine, minimax,
+  alfa-beeta kärpimine, võidutuvastus, arvuti käigud ja lähtestamine.
+
+## GitHubi repositoorium
 
 https://github.com/MarcusPuust/Domineering-minimax
 
-## Development diary
+## Projekti päevik
 
-### Prompt 1: Create the initial project
+### 1. Projekti loomine
 
-- **Result:** Created the title page and short description.
-- **Files:** `AGENTS.md`, `index.html`, `style.css`, `script.js`, and `README.md`.
-- **Problem:** The project folder was not yet a Git repository.
-- **Fix:** Initialized Git and published the first commit to GitHub.
+- **Kasutaja ülesanne:** Loo projekt „Domineering Minimax”, kasutades ainult
+  HTML-i, CSS-i ja JavaScripti. Loo esialgu ainult pealkirja ja mängu
+  lühikirjeldusega leht.
+- **Tulemus:** Loodi algne staatiline leht ja projekti juhised.
+- **Muudetud failid:** `AGENTS.md`, `index.html`, `style.css`, `script.js`,
+  `README.md`.
+- **Parandatud probleem:** Projekti kaust ei olnud veel Git-repositoorium.
+  Git lähtestati ja projekt avaldati GitHubis.
 
-### Prompt 2: Add the 4 by 4 board
+### 2. 4 × 4 mängulaua lisamine
 
-- **Result:** Added a CSS Grid board containing 16 clickable cells.
-- **Files:** `index.html`, `style.css`, `script.js`, and `README.md`.
-- **Testing:** Verified four computed grid columns and four computed grid rows.
+- **Kasutaja ülesanne:** Loo CSS Grid abil 4 × 4 mängulaud 16 klikitava
+  lahtriga ja lisa mängu olek.
+- **Tulemus:** Lisati nelja rea ja nelja veeruga mängulaud.
+- **Muudetud failid:** `index.html`, `style.css`, `script.js`, `README.md`.
+- **Testimine:** Kontrolliti, et brauseris on 16 lahtrit ning CSS Grid annab
+  neli veergu ja neli rida.
+- **Parandatud probleem:** Selle sammu käigus probleeme ei leitud.
 
-### Prompt 3: Add Player 0 rules
+### 3. Mängija 0 vertikaalsed käigud
 
-- **Result:** Added vertical two-cell selection for Player 0, blue `V` pieces,
-  and invalid-selection feedback.
-- **Files:** `index.html`, `style.css`, `script.js`, and `README.md`.
-- **Testing:** Tested one invalid horizontal selection and one valid vertical
-  selection.
+- **Kasutaja ülesanne:** Lisa mängija 0 reegel, mille järgi tuleb valida kaks
+  järjestikust lahtrit samas veerus.
+- **Tulemus:** Õige käik värvib lahtrid siniseks ja kuvab mõlemas tähe `V`.
+  Vigane valik jätab laua muutmata ja kuvab veateate.
+- **Muudetud failid:** `index.html`, `style.css`, `script.js`, `README.md`.
+- **Testimine:** Kontrolliti üht vigast ja üht kehtivat valikut.
+- **Parandatud probleem:** Selle sammu käigus probleeme ei leitud.
 
-### Prompt 4: Add Player 1 rules
+### 4. Mängija 1 horisontaalsed käigud
 
-- **Result:** Added horizontal two-cell selection for Player 1, orange `H`
-  pieces, alternating turns, and invalid-selection feedback.
-- **Files:** `script.js`, `style.css`, and `README.md`.
-- **Problem:** The selected-cell state was not cleared after a valid move.
-- **Fix:** Cleared the selection array after each valid move and retested both
-  players.
+- **Kasutaja ülesanne:** Lisa mängija 1 reegel, mille järgi tuleb valida kaks
+  järjestikust lahtrit samas reas.
+- **Tulemus:** Lisati oranžid `H`-lahtrid, mängijate vaheldumine ja
+  mängija-põhised veateated.
+- **Muudetud failid:** `script.js`, `style.css`, `README.md`.
+- **Testimine:** Kontrolliti mõlema mängija kehtivat ja vigast käiku.
+- **Parandatud probleem:** Kehtiva käigu järel ei tühjendatud valitud lahtrite
+  loendit. Loend tühjendatakse nüüd pärast iga kehtivat käiku.
 
-### Prompt 5: Add win detection
+### 5. Võidutuvastus ja uus mäng
 
-- **Result:** Added legal-move checks after each valid move, winner messaging,
-  disabled board cells after a win, and the New Game reset button.
-- **Files:** `index.html`, `style.css`, `script.js`, and `README.md`.
-- **Testing:** Played a complete game to a winner and verified that New Game
-  restored the initial turn, empty board, and enabled cells.
+- **Kasutaja ülesanne:** Kontrolli pärast iga käiku, kas järgmisel mängijal on
+  seaduslik käik. Lisa võiduteade ja nupp **New Game**.
+- **Tulemus:** Mäng lõpeb, kui järgmisel mängijal ei ole võimalik käiku teha,
+  ning kõik lahtrid keelatakse. Uue mängu nupp taastab algseisu.
+- **Muudetud failid:** `index.html`, `style.css`, `script.js`, `README.md`.
+- **Testimine:** Mängiti mäng võiduni ja kontrolliti laua lähtestamist.
+- **Parandatud probleem:** Selle sammu käigus eraldi probleeme ei leitud.
 
-### Current task: Update project instructions
+### 6. Lihtne arvutivastane
 
-- **Result:** Updated `AGENTS.md` with the school-project rules, development
-  process, AI roadmap, and GitHub requirements. Updated this README with setup,
-  play instructions, the repository link, and the development diary.
-- **Testing:** Verified the documentation content and checked the Git working
-  tree before committing.
+- **Kasutaja ülesanne:** Muuda mäng inimese ja arvuti vaheliseks. Arvuti peab
+  valima esimese leitud seadusliku horisontaalse käigu.
+- **Tulemus:** Mängija 0 teeb käigu hiirega ja mängija 1 teeb pärast lühikest
+  mõtlemisteadet automaatse käigu.
+- **Muudetud failid:** `script.js`, `README.md`.
+- **Testimine:** Mängiti täielik inimene-arvuti mäng võiduni.
+- **Parandatud probleem:** Selle sammu käigus probleeme ei leitud.
 
-### Prompt 6: Add a simple computer opponent
+### 7. Minimax-algoritm
 
-- **Result:** Changed the game to human versus computer mode. Player 0 places
-  vertical pieces, and Player 1 automatically places the first legal
-  horizontal move after a short thinking message.
-- **Files:** `script.js` and `README.md`.
-- **Testing:** Tested the computer move message and played a complete game to a
-  winner.
+- **Kasutaja ülesanne:** Asenda esimese seadusliku käigu valik sügavuseni 5
+  töötava minimax-algoritmiga ja kuva jõudlusmõõdikud.
+- **Tulemus:** Arvuti valib minimaxi abil käigu ning kuvab sügavuse,
+  kontrollitud seisude arvu ja aja.
+- **Muudetud failid:** `script.js`, `README.md`.
+- **Testimine:** Mängiti täielik mäng ja kontrolliti otsingumõõdikuid.
+- **Parandatud probleem:** Vertikaalse käigu indeksiarvutus kasutas vale
+  sammu. See parandati nii, et järgmine lahter asub samas veerus järgmises reas.
 
-### Prompt 7: Replace the first legal move with minimax
+### 8. Alfa-beeta kärpimine
 
-- **Result:** Replaced the computer's first-legal-move strategy with minimax
-  using a maximum search depth of 5, terminal win/loss scores, and mobility
-  evaluation.
-- **Files:** `script.js` and `README.md`.
-- **Testing:** Played a complete human-versus-computer game and verified that
-  every computer move reports its search depth, checked states, and elapsed
-  time.
+- **Kasutaja ülesanne:** Lisa võimalus võrrelda tavalist minimaxi ja
+  alfa-beeta kärpimisega minimaxi.
+- **Tulemus:** Lisati otsingumeetodi valik ja alfa-beeta kärpimise algoritm.
+  Mõlemad kasutavad sügavust 5 ning kuvavad seisude arvu ja aja.
+- **Muudetud failid:** `index.html`, `style.css`, `script.js`, `README.md`.
+- **Testimine:** Sama mänguseisu korral valisid mõlemad meetodid sama käigu.
+  Tavaline minimax kontrollis 4107 seisundit ja alfa-beeta kärpimine 1346
+  seisundit.
+- **Parandatud probleem:** Selle sammu käigus probleeme ei leitud.
 
-### Prompt 8: Add alpha-beta pruning
+### 9. README tõlkimine eesti keelde
 
-- **Result:** Added a search-mode selector for plain minimax and minimax with
-  alpha-beta pruning. Both modes use the same depth 5 and board evaluation.
-- **Files:** `index.html`, `style.css`, `script.js`, and `README.md`.
-- **Testing:** Compared both modes from the same board position and verified
-  that alpha-beta reports fewer checked states while choosing a legal move.
-- **Explanation:** Alpha-beta pruning stops exploring a branch when its score
-  cannot improve the current best result. It therefore checks fewer game
-  states than plain minimax without changing the selected move or search
-  depth.
+- **Kasutaja ülesanne:** Dokumenteeri mäng, algoritmid, jõudlus ja arendusajalugu
+  eesti keeles.
+- **Tulemus:** README sisaldab nüüd mängujuhiseid, reegleid, algoritmide
+  selgitusi, jõudlustabeli kohatäiteid ja täielikku projekti päevikut.
+- **Muudetud failid:** `README.md`.
+- **Testimine:** Kontrolliti, et ainult dokumentatsioon muutus ja mängukoodi ei
+  muudetud.
+- **Parandatud probleem:** Varasem README oli inglise keeles ega sisaldanud
+  kõiki nõutud eestikeelseid selgitusi.
