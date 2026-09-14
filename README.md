@@ -19,7 +19,9 @@ Mängu saab avada otse brauseris:
 4. Arvuti mõtleb hetke ja teeb mängija 1 horisontaalse käigu.
 5. Arvuti käigu järel kuvatakse valitud käik, otsingu sügavus, kontrollitud
    mänguseisude arv ja kulunud aeg millisekundites.
-6. Uue mängu alustamiseks vajuta nuppu **New Game**.
+6. Uue mängu alustamiseks vajuta nuppu **New Game** või mängu lõpus nuppu
+   **Play Again**. Võidu korral kuvatakse mängulaua kohal võitja ülekate.
+   Inimese võidu korral mängib lühikest aega konfetti.
 
 Soovi korral võib käivitada ka kohaliku veebiserveri:
 
@@ -191,3 +193,18 @@ https://github.com/MarcusPuust/Domineering-minimax
   muudetud.
 - **Parandatud probleem:** Varasem README oli inglise keeles ega sisaldanud
   kõiki nõutud eestikeelseid selgitusi.
+
+### 10. Mängu lõpu kasutajakogemuse parandamine
+
+- **Kasutaja ülesanne:** Lisa mängu lõppedes keskne võitja ülekate tekstiga
+  **You win!** või **Computer wins!**, **Play Again** nupp ja konfetti ainult
+  inimese võidu korral. Mängureegleid ja minimaxi loogikat ei tohi muuta.
+- **Tulemus:** Mängu lõppedes kuvatakse laua kohal võitja ülekate. **Play Again**
+  alustab uue mängu. Inimese võidu korral luuakse ilma välise teegita lühike
+  konfeti animatsioon, mis eemaldatakse automaatselt.
+- **Muudetud failid:** `index.html`, `style.css`, `script.js`, `README.md`.
+- **Testimine:** Kontrolliti arvuti võidu ja inimese võidu ülekatet,
+  **Play Again** nuppu, konfetti eemaldamist ning olemasoleva **New Game** nupu
+  toimimist.
+- **Parandatud probleem:** Konfeti jaoks lisati lühike ajapiirang ja
+  `pointer-events: none`, et animatsioon ei segaks **Play Again** nuppu.

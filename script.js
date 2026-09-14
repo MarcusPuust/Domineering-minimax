@@ -9,12 +9,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const gameMessage = document.querySelector("#game-message");
   const gameBoard = document.querySelector("#game-board");
   const newGameButton = document.querySelector("#new-game-button");
+  const winnerOverlay = document.querySelector("#winner-overlay");
+  const winnerTitle = document.querySelector("#winner-title");
+  const playAgainButton = document.querySelector("#play-again-button");
   const searchMode = document.querySelector("#search-mode");
   const selectedCells = [];
   let currentPlayer = 0;
   let gameOver = false;
   let computerThinking = false;
   let computerMoveTimer;
+  let confettiTimer;
 
   const setStatusForPlayer = () => {
     const pieceDirection = currentPlayer === 0 ? "vertical" : "horizontal";
@@ -194,6 +198,34 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   };
 
+  const showConfetti = () => {
+    const colors = ["#2563eb", "#f97316", "#facc15", "#22c55e", "#ec4899"];
+    const confetti = [];
+
+    for (let index = 0; index < 36; index += 1) {
+      const piece = document.createElement("span");
+      piece.className = "confetti-piece";
+      piece.style.left = `${Math.random() * 100}%`;
+      piece.style.backgroundColor = colors[index % colors.length];
+      piece.style.animationDelay = `${Math.random() * 0.35}s`;
+      document.body.appendChild(piece);
+      confetti.push(piece);
+    }
+
+    confettiTimer = setTimeout(() => {
+      confetti.forEach((piece) => piece.remove());
+    }, 2000);
+  };
+
+  const showWinnerOverlay = (winner) => {
+    winnerTitle.textContent = winner === 0 ? "You win!" : "Computer wins!";
+    winnerOverlay.hidden = false;
+
+    if (winner === 0) {
+      showConfetti();
+    }
+  };
+
   const endGameIfNeeded = () => {
     if (!hasLegalMove(currentPlayer)) {
       const winner = currentPlayer === 0 ? 1 : 0;
@@ -203,6 +235,7 @@ document.addEventListener("DOMContentLoaded", () => {
       gameBoard.querySelectorAll(".board-cell").forEach((cell) => {
         cell.disabled = true;
       });
+      showWinnerOverlay(winner);
     }
   };
 
@@ -332,8 +365,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  newGameButton.addEventListener("click", () => {
+  const resetGame = () => {
     clearTimeout(computerMoveTimer);
+    clearTimeout(confettiTimer);
+    document.querySelectorAll(".confetti-piece").forEach((piece) => piece.remove());
     gameBoard.querySelectorAll(".board-cell").forEach((cell) => {
       cell.className = "board-cell";
       cell.textContent = "";
@@ -345,8 +380,12 @@ document.addEventListener("DOMContentLoaded", () => {
     gameOver = false;
     computerThinking = false;
     gameMessage.textContent = "";
+    winnerOverlay.hidden = true;
     setStatusForPlayer();
-  });
+  };
+
+  newGameButton.addEventListener("click", resetGame);
+  playAgainButton.addEventListener("click", resetGame);
 
   console.log("Domineering Minimax page loaded successfully.");
 });

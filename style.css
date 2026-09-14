@@ -94,6 +94,10 @@ body {
   font: inherit;
 }
 
+.game-board-container {
+  position: relative;
+}
+
 .game-board {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -103,6 +107,70 @@ body {
   padding: 0.35rem;
   background: var(--accent);
   border-radius: 10px;
+}
+
+.winner-overlay {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  background: rgba(15, 23, 42, 0.62);
+  z-index: 2;
+}
+
+.winner-overlay[hidden] {
+  display: none;
+}
+
+.winner-card {
+  width: min(85%, 280px);
+  padding: 1.5rem;
+  border-radius: 12px;
+  background: var(--panel);
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.25);
+  text-align: center;
+}
+
+.winner-title {
+  margin: 0 0 1rem;
+  color: var(--text);
+  font-size: 1.7rem;
+}
+
+.play-again-button {
+  border: 0;
+  border-radius: 6px;
+  padding: 0.7rem 1.2rem;
+  background: var(--accent);
+  color: #ffffff;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 700;
+}
+
+.play-again-button:hover,
+.play-again-button:focus-visible {
+  background: #1d4ed8;
+  outline: 3px solid #93c5fd;
+  outline-offset: 2px;
+}
+
+.confetti-piece {
+  position: fixed;
+  top: -0.75rem;
+  width: 0.55rem;
+  height: 0.9rem;
+  pointer-events: none;
+  z-index: 10;
+  animation: confetti-fall 1.6s linear forwards;
+}
+
+@keyframes confetti-fall {
+  to {
+    transform: translateY(105vh) rotate(720deg);
+    opacity: 0;
+  }
 }
 
 .board-cell {

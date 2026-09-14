@@ -35,11 +35,21 @@
             <option value="alpha-beta">Minimax with alpha-beta pruning</option>
           </select>
         </label>
-        <div
-          class="game-board"
-          id="game-board"
-          aria-label="4 by 4 Domineering board"
-        ></div>
+        <div class="game-board-container">
+          <div
+            class="game-board"
+            id="game-board"
+            aria-label="4 by 4 Domineering board"
+          ></div>
+          <div class="winner-overlay" id="winner-overlay" hidden>
+            <div class="winner-card" role="dialog" aria-modal="true">
+              <h2 class="winner-title" id="winner-title"></h2>
+              <button class="play-again-button" id="play-again-button" type="button">
+                Play Again
+              </button>
+            </div>
+          </div>
+        </div>
         <button class="new-game-button" id="new-game-button" type="button">
           New Game
         </button>
