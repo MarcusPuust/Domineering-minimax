@@ -1,8 +1,8 @@
 # Domineering Minimax
 
 This school project is a Domineering game on a 4 by 4 board. Player 0 is
-currently controlled by the human, and Player 1 will become the computer
-opponent in a later task.
+controlled by the human, and Player 1 is controlled by a simple computer
+opponent that currently chooses the first legal move it finds.
 
 ## Current features
 
@@ -12,14 +12,16 @@ opponent in a later task.
 - Legal move validation for both players.
 - Win detection when the next player has no legal move.
 - A New Game button.
-- No AI, minimax, or alpha-beta pruning yet.
+- Automatic computer moves for Player 1.
+- No minimax or alpha-beta pruning yet.
 
 ## Files
 
 - `AGENTS.md` — project instructions and development requirements.
 - `index.html` — page structure, game status, board, and New Game button.
 - `style.css` — page, board, piece, and button styling.
-- `script.js` — board creation, move validation, win detection, and reset logic.
+- `script.js` — board creation, human/computer move validation, win detection,
+  computer moves, and reset logic.
 
 ## Setup and play
 
@@ -31,7 +33,9 @@ python3 -m http.server 8000
 ```
 
 Then open http://localhost:8000. Click two cells to place a piece according
-to the current player's direction. Select **New Game** to reset the board.
+to place Player 0's vertical piece. The computer then briefly thinks and
+places the first legal horizontal piece it finds. Select **New Game** to reset
+the board.
 
 ## GitHub repository
 
@@ -84,3 +88,12 @@ https://github.com/MarcusPuust/Domineering-minimax
   play instructions, the repository link, and the development diary.
 - **Testing:** Verified the documentation content and checked the Git working
   tree before committing.
+
+### Prompt 6: Add a simple computer opponent
+
+- **Result:** Changed the game to human versus computer mode. Player 0 places
+  vertical pieces, and Player 1 automatically places the first legal
+  horizontal move after a short thinking message.
+- **Files:** `script.js` and `README.md`.
+- **Testing:** Tested the computer move message and played a complete game to a
+  winner.

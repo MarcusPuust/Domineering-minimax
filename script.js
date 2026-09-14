@@ -1,5 +1,5 @@
-// This file creates the board and handles the two players' basic move rules.
-// Win detection and AI will be added in later steps.
+// This file creates the board and handles the human and computer move rules.
+// Minimax and alpha-beta pruning will be added in later steps.
 
 document.addEventListener("DOMContentLoaded", () => {
   const pageTitle = document.querySelector(".page-title");
@@ -10,6 +10,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const selectedCells = [];
   let currentPlayer = 0;
   let gameOver = false;
+  let computerThinking = false;
+  let computerMoveTimer;
 
   const setStatusForPlayer = () => {
     const pieceDirection = currentPlayer === 0 ? "vertical" : "horizontal";
@@ -50,6 +52,52 @@ document.addEventListener("DOMContentLoaded", () => {
     );
   };
 
+  const findFirstLegalMove = (player) => {
+    const cells = Array.from(gameBoard.querySelectorAll(".board-cell"));
+    const emptyCells = cells.filter(
+      (cell) =>
+        !cell.classList.contains("vertical-piece") &&
+        !cell.classList.contains("horizontal-piece"),
+    );
+
+    for (const firstCell of emptyCells) {
+      for (const secondCell of emptyCells) {
+        if (firstCell === secondCell) {
+          continue;
+        }
+
+        const sameLine =
+          player === 0
+            ? firstCell.dataset.column === secondCell.dataset.column
+            : firstCell.dataset.row === secondCell.dataset.row;
+        const consecutivePositions =
+          player === 0
+            ? Math.abs(
+                Number(firstCell.dataset.row) -
+                  Number(secondCell.dataset.row),
+              ) === 1
+            : Math.abs(
+                Number(firstCell.dataset.column) -
+                  Number(secondCell.dataset.column),
+              ) === 1;
+
+        if (sameLine && consecutivePositions) {
+          return [firstCell, secondCell];
+        }
+      }
+    }
+
+    return null;
+  };
+
+  const markPiece = (cells, pieceClass, pieceLetter) => {
+    cells.forEach((cell) => {
+      cell.classList.add(pieceClass);
+      cell.textContent = pieceLetter;
+      cell.disabled = true;
+    });
+  };
+
   const endGameIfNeeded = () => {
     if (!hasLegalMove(currentPlayer)) {
       const winner = currentPlayer === 0 ? 1 : 0;
@@ -60,6 +108,25 @@ document.addEventListener("DOMContentLoaded", () => {
         cell.disabled = true;
       });
     }
+  };
+
+  const makeComputerMove = () => {
+    computerThinking = false;
+    const computerMove = findFirstLegalMove(1);
+
+    if (!computerMove) {
+      endGameIfNeeded();
+      return;
+    }
+
+    markPiece(computerMove, "horizontal-piece", "H");
+    const row = Number(computerMove[0].dataset.row) + 1;
+    const firstColumn = Number(computerMove[0].dataset.column) + 1;
+    const secondColumn = Number(computerMove[1].dataset.column) + 1;
+    gameMessage.textContent = `Computer placed H at row ${row}, columns ${firstColumn}-${secondColumn}.`;
+    currentPlayer = 0;
+    setStatusForPlayer();
+    endGameIfNeeded();
   };
 
   if (pageTitle) {
@@ -78,7 +145,7 @@ document.addEventListener("DOMContentLoaded", () => {
       cell.dataset.column = String(cellNumber % 4);
 
       cell.addEventListener("click", () => {
-        if (gameOver) {
+        if (gameOver || computerThinking || currentPlayer !== 0) {
           return;
         }
 
@@ -131,9 +198,17 @@ document.addEventListener("DOMContentLoaded", () => {
             });
 
             selectedCells.length = 0;
-            currentPlayer = currentPlayer === 0 ? 1 : 0;
-            setStatusForPlayer();
-            endGameIfNeeded();
+            currentPlayer = 1;
+
+            if (!hasLegalMove(currentPlayer)) {
+              endGameIfNeeded();
+              return;
+            }
+
+            computerThinking = true;
+            gameStatus.textContent = "Computer is thinking...";
+            gameMessage.textContent = "";
+            computerMoveTimer = setTimeout(makeComputerMove, 500);
           } else {
             selectedCells.forEach((selectedCell) =>
               selectedCell.classList.remove("selected"),
@@ -152,6 +227,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   newGameButton.addEventListener("click", () => {
+    clearTimeout(computerMoveTimer);
     gameBoard.querySelectorAll(".board-cell").forEach((cell) => {
       cell.className = "board-cell";
       cell.textContent = "";
@@ -161,6 +237,7 @@ document.addEventListener("DOMContentLoaded", () => {
     selectedCells.length = 0;
     currentPlayer = 0;
     gameOver = false;
+    computerThinking = false;
     gameMessage.textContent = "";
     setStatusForPlayer();
   });
