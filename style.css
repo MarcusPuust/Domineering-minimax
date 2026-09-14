@@ -71,6 +71,13 @@ body {
   color: var(--text);
 }
 
+.game-message {
+  min-height: 1.5rem;
+  margin: -0.5rem 0 0.75rem;
+  color: #b91c1c;
+  font-size: 0.95rem;
+}
+
 .game-board {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -95,4 +102,16 @@ body {
   background: #bfdbfe;
   outline: 3px solid #1d4ed8;
   outline-offset: -3px;
+}
+
+.board-cell.selected {
+  background: #93c5fd;
+}
+
+.board-cell.vertical-piece {
+  background: #2563eb;
+  color: #ffffff;
+  cursor: default;
+  font-size: 1.5rem;
+  font-weight: 700;
 }
