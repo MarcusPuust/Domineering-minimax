@@ -123,3 +123,22 @@ body {
   font-size: 1.5rem;
   font-weight: 700;
 }
+
+.new-game-button {
+  margin-top: 1rem;
+  border: 0;
+  border-radius: 6px;
+  padding: 0.7rem 1.2rem;
+  background: var(--text);
+  color: #ffffff;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 700;
+}
+
+.new-game-button:hover,
+.new-game-button:focus-visible {
+  background: #374151;
+  outline: 3px solid #9ca3af;
+  outline-offset: 2px;
+}
