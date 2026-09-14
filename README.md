@@ -31,6 +31,9 @@ python3 -m http.server 8000
 
 Seejärel ava brauseris http://localhost:8000.
 
+Mängu võib avada ka otse failist `index.html`, sest projekt ei vaja
+ehitusprotsessi ega serveripoolset koodi.
+
 ## Domineeringu reeglid
 
 - Mängulaud on 4 × 4 ehk sellel on 16 lahtrit.
@@ -39,7 +42,10 @@ Seejärel ava brauseris http://localhost:8000.
 - Vertikaalne nupp katab kaks järjestikust vaba lahtrit samas veerus.
 - Horisontaalne nupp katab kaks järjestikust vaba lahtrit samas reas.
 - Nuppu ei saa asetada hõivatud lahtritele.
-- Mängija kaotab, kui tal ei ole enam ühtegi seaduslikku käiku.
+- Inimene teeb esimese käigu vertikaalse klotsiga ja arvuti vastab
+  horisontaalse klotsiga.
+- Mängija kaotab ja teine mängija võidab, kui tal ei ole enam ühtegi
+  seaduslikku käiku.
 
 ## Minimax-algoritm
 
@@ -58,6 +64,17 @@ hind = mängija 1 horisontaalsete käikude arv
 ```
 
 Arvuti valib käigu, mille minimax-hinnang on talle kõige kasulikum.
+
+## Võitja ja mängu lõpp
+
+Kui järgmisel mängijal ei ole enam seaduslikku käiku, mäng lõpeb. Inimese
+võidu korral kuvatakse mängulaua kohal **You win!** ja arvuti võidu korral
+**Computer wins!**. Võiduülekattes olev **Play Again** nupp alustab kohe uue
+mängu. Lehe all olev **New Game** nupp teeb sama ka mängu ajal.
+
+Inimese võidu tähistamiseks kuvatakse lühike isetehtud konfeti animatsioon.
+Konfetti ei kasuta välist teeki, kestab ainult lühikest aega ega takista
+võiduülekatte nuppude kasutamist.
 
 ## Alfa-beeta kärpimine
 
@@ -94,6 +111,12 @@ sest mittevajalikud otsinguharud jäetakse läbi vaatamata.
 ## GitHubi repositoorium
 
 https://github.com/MarcusPuust/Domineering-minimax
+
+## GitHub Pages
+
+GitHub Pagesi avaldatud mängu link:
+
+`[Lisa siia GitHub Pagesi URL]`
 
 ## Projekti päevik
 
@@ -227,3 +250,18 @@ https://github.com/MarcusPuust/Domineering-minimax
   Mõlemad valisid sama käigu sügavusel 5.
 - **Muudetud failid:** `README.md`.
 - **Parandatud probleem:** Testimise käigus selget mängukoodi viga ei leitud.
+
+### 12. Lõpetatud mängu dokumenteerimine
+
+- **Kasutatud viip:** „Update README.md in Estonian to reflect the completed
+  game. Include game setup, Domineeringu reeglid, 4 × 4 laud, inimese ja
+  arvuti klotsid, võitja selgitus, minimax, alfa-beeta kärpimine, jõudlustabel,
+  võiduoverlay, konfetti efekt, arenduspäevik ning GitHubi ja GitHub Pagesi
+  lingi koht. Ära muuda mängukoodi.”
+- **Tulemus:** README kirjeldab nüüd lõpetatud mängu avamist, käivitamist,
+  reegleid, mängijaid, võitja määramist, algoritme, jõudlust, mängu lõpu
+  kasutajaliidest ning avaldamise linke.
+- **Muudetud failid:** `README.md`.
+- **Parandatud probleem:** Varasem dokumentatsioon ei rõhutanud piisavalt,
+  et inimene kasutab vertikaalseid ja arvuti horisontaalseid klotse, ega
+  sisaldanud eraldi GitHub Pagesi lingi kohta.
