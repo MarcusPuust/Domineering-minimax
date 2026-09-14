@@ -265,3 +265,17 @@ https://marcuspuust.github.io/Domineering-minimax/
 - **Parandatud probleem:** Varasem dokumentatsioon ei rõhutanud piisavalt,
   et inimene kasutab vertikaalseid ja arvuti horisontaalseid klotse, ega
   sisaldanud eraldi GitHub Pagesi lingi kohta.
+
+### 13. GitHub Pagesis avaldamine
+
+- **Kasutatud viip:** „Tahan avaldada GitHub Pages näol. Kontrolli, et
+  README oleks ajakohane ja avalik mäng töötaks.”
+- **Tulemus:** Lisati `.github/workflows/deploy-pages.yml`, mis avaldab
+  staatilised failid GitHub Pagesi kaudu. Avalik mäng töötab aadressil
+  https://marcuspuust.github.io/Domineering-minimax/.
+- **Muudetud failid:** `.github/workflows/deploy-pages.yml`, `README.md`.
+- **Testimine:** Kontrolliti avalikku GitHub Pagesi URL-i ja kinnitati, et
+  mängulaud, otsingumeetodi valik ja **New Game** nupp laadivad.
+- **Parandatud probleem:** Esimene Pagesi töövoog vajati GitHubi Pagesi
+  seadistuse aktiveerimist. Pärast **Settings → Pages → GitHub Actions**
+  valimist avaldus leht õigel URL-il.
