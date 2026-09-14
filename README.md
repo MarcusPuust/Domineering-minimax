@@ -12,9 +12,10 @@ computer opponent.
 - Legal move validation for both players.
 - Win detection when the next player has no legal move.
 - A New Game button.
-- Automatic computer moves for Player 1 using minimax with search depth 5.
+- Automatic computer moves for Player 1 using minimax or alpha-beta pruning
+  with search depth 5.
 - Search depth, checked states, and elapsed time shown after computer moves.
-- No alpha-beta pruning yet.
+- A selector allows comparing both search modes from the same position.
 
 ## Files
 
@@ -35,7 +36,8 @@ python3 -m http.server 8000
 
 Then open http://localhost:8000. Click two cells to place a piece according
 to place Player 0's vertical piece. The computer then briefly thinks and chooses a move using
-minimax. Select **New Game** to reset the board.
+minimax or minimax with alpha-beta pruning. Select **New Game** to reset the
+board.
 
 ## GitHub repository
 
@@ -107,3 +109,15 @@ https://github.com/MarcusPuust/Domineering-minimax
 - **Testing:** Played a complete human-versus-computer game and verified that
   every computer move reports its search depth, checked states, and elapsed
   time.
+
+### Prompt 8: Add alpha-beta pruning
+
+- **Result:** Added a search-mode selector for plain minimax and minimax with
+  alpha-beta pruning. Both modes use the same depth 5 and board evaluation.
+- **Files:** `index.html`, `style.css`, `script.js`, and `README.md`.
+- **Testing:** Compared both modes from the same board position and verified
+  that alpha-beta reports fewer checked states while choosing a legal move.
+- **Explanation:** Alpha-beta pruning stops exploring a branch when its score
+  cannot improve the current best result. It therefore checks fewer game
+  states than plain minimax without changing the selected move or search
+  depth.

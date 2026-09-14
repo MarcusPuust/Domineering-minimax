@@ -1,5 +1,4 @@
-// This file creates the board, handles moves, and runs depth-limited minimax.
-// Alpha-beta pruning will be added in a later step.
+// This file creates the board, handles moves, and runs depth-limited searches.
 
 document.addEventListener("DOMContentLoaded", () => {
   const BOARD_SIZE = 4;
@@ -10,6 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const gameMessage = document.querySelector("#game-message");
   const gameBoard = document.querySelector("#game-board");
   const newGameButton = document.querySelector("#new-game-button");
+  const searchMode = document.querySelector("#search-mode");
   const selectedCells = [];
   let currentPlayer = 0;
   let gameOver = false;
@@ -83,20 +83,90 @@ document.addEventListener("DOMContentLoaded", () => {
     return player === 1 ? Math.max(...scores) : Math.min(...scores);
   };
 
+  const alphaBeta = (
+    board,
+    player,
+    depth,
+    searchStats,
+    alpha,
+    beta,
+  ) => {
+    searchStats.checkedStates += 1;
+    const legalMoves = getLegalMoves(board, player);
+
+    if (legalMoves.length === 0) {
+      return player === 1 ? -COMPUTER_WIN_SCORE : COMPUTER_WIN_SCORE;
+    }
+
+    if (depth === 0) {
+      return evaluateBoard(board);
+    }
+
+    if (player === 1) {
+      let bestScore = -Infinity;
+
+      for (const move of legalMoves) {
+        const score = alphaBeta(
+          applyMove(board, move, player),
+          0,
+          depth - 1,
+          searchStats,
+          alpha,
+          beta,
+        );
+        bestScore = Math.max(bestScore, score);
+        alpha = Math.max(alpha, bestScore);
+
+        if (beta <= alpha) {
+          break;
+        }
+      }
+
+      return bestScore;
+    }
+
+    let bestScore = Infinity;
+
+    for (const move of legalMoves) {
+      const score = alphaBeta(
+        applyMove(board, move, player),
+        1,
+        depth - 1,
+        searchStats,
+        alpha,
+        beta,
+      );
+      bestScore = Math.min(bestScore, score);
+      beta = Math.min(beta, bestScore);
+
+      if (beta <= alpha) {
+        break;
+      }
+    }
+
+    return bestScore;
+  };
+
   const chooseComputerMove = (board) => {
     const searchStats = { checkedStates: 0 };
     const startTime = performance.now();
     const legalMoves = getLegalMoves(board, 1);
+    const useAlphaBeta = searchMode.value === "alpha-beta";
     let bestMove = legalMoves[0];
     let bestScore = -Infinity;
 
     legalMoves.forEach((move) => {
-      const score = minimax(
-        applyMove(board, move, 1),
-        0,
-        MAX_SEARCH_DEPTH - 1,
-        searchStats,
-      );
+      const nextBoard = applyMove(board, move, 1);
+      const score = useAlphaBeta
+        ? alphaBeta(
+            nextBoard,
+            0,
+            MAX_SEARCH_DEPTH - 1,
+            searchStats,
+            -Infinity,
+            Infinity,
+          )
+        : minimax(nextBoard, 0, MAX_SEARCH_DEPTH - 1, searchStats);
 
       if (score > bestScore) {
         bestScore = score;
@@ -106,6 +176,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     return {
       move: bestMove,
+      mode: useAlphaBeta ? "Minimax with alpha-beta pruning" : "Minimax",
       checkedStates: searchStats.checkedStates,
       elapsedMilliseconds: Math.round(performance.now() - startTime),
     };
@@ -156,7 +227,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const secondColumn = (computerMove.secondIndex % BOARD_SIZE) + 1;
     gameMessage.textContent =
       `Computer placed H at row ${row}, columns ${firstColumn}-${secondColumn}. ` +
-      `Search depth: ${MAX_SEARCH_DEPTH}; states checked: ${searchResult.checkedStates}; ` +
+      `${searchResult.mode}; search depth: ${MAX_SEARCH_DEPTH}; ` +
+      `states checked: ${searchResult.checkedStates}; ` +
       `time: ${searchResult.elapsedMilliseconds} ms.`;
     currentPlayer = 0;
     setStatusForPlayer();

@@ -78,6 +78,22 @@ body {
   font-size: 0.95rem;
 }
 
+.search-mode-label {
+  display: block;
+  margin-bottom: 1rem;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.search-mode-label select {
+  margin-left: 0.35rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 5px;
+  padding: 0.35rem;
+  color: var(--text);
+  font: inherit;
+}
+
 .game-board {
   display: grid;
   grid-template-columns: repeat(4, 1fr);

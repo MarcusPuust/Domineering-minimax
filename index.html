@@ -28,6 +28,13 @@
           Player 0&rsquo;s turn: place a vertical piece.
         </p>
         <p class="game-message" id="game-message" aria-live="polite"></p>
+        <label class="search-mode-label" for="search-mode">
+          Computer search:
+          <select id="search-mode">
+            <option value="minimax">Minimax</option>
+            <option value="alpha-beta">Minimax with alpha-beta pruning</option>
+          </select>
+        </label>
         <div
           class="game-board"
           id="game-board"
