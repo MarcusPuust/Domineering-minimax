@@ -1,12 +1,12 @@
 # Domineering Minimax
 
-This project is a simple static web page for a Domineering game project. The current version only includes the page title and a short description, with no board or gameplay yet.
+This project is a simple web page for a Domineering game project. The current version includes the page title, a short description, and an empty 4 by 4 board. Move rules, win detection, and AI are not included yet.
 
 ## Files
 - `AGENTS.md` — project rules and instructions.
 - `index.html` — page structure.
-- `style.css` — page styling.
-- `script.js` — minimal JavaScript for the page.
+- `style.css` — page and 4 by 4 board styling.
+- `script.js` — creates the board's 16 clickable cells.
 
 ## Run it locally
 1. Open `index.html` in a browser, or

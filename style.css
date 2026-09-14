@@ -59,3 +59,40 @@ body {
   line-height: 1.7;
   color: var(--muted);
 }
+
+.game-area {
+  width: min(100%, 420px);
+  margin: 2rem auto 0;
+}
+
+.game-status {
+  margin: 0 0 1rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.game-board {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  gap: 0.35rem;
+  aspect-ratio: 1;
+  padding: 0.35rem;
+  background: var(--accent);
+  border-radius: 10px;
+}
+
+.board-cell {
+  min-width: 0;
+  border: 0;
+  border-radius: 5px;
+  background: var(--accent-soft);
+  cursor: pointer;
+}
+
+.board-cell:hover,
+.board-cell:focus-visible {
+  background: #bfdbfe;
+  outline: 3px solid #1d4ed8;
+  outline-offset: -3px;
+}
