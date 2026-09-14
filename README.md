@@ -116,7 +116,7 @@ https://github.com/MarcusPuust/Domineering-minimax
 
 GitHub Pagesi avaldatud mängu link:
 
-`[Lisa siia GitHub Pagesi URL]`
+https://marcuspuust.github.io/Domineering-minimax/
 
 ## Projekti päevik
 
