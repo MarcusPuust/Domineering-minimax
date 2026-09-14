@@ -1,7 +1,10 @@
-// This file creates the board and handles the human and computer move rules.
-// Minimax and alpha-beta pruning will be added in later steps.
+// This file creates the board, handles moves, and runs depth-limited minimax.
+// Alpha-beta pruning will be added in a later step.
 
 document.addEventListener("DOMContentLoaded", () => {
+  const BOARD_SIZE = 4;
+  const MAX_SEARCH_DEPTH = 5;
+  const COMPUTER_WIN_SCORE = 100000;
   const pageTitle = document.querySelector(".page-title");
   const gameStatus = document.querySelector("#game-status");
   const gameMessage = document.querySelector("#game-message");
@@ -18,76 +21,98 @@ document.addEventListener("DOMContentLoaded", () => {
     gameStatus.textContent = `Player ${currentPlayer}’s turn: place a ${pieceDirection} piece.`;
   };
 
-  const hasLegalMove = (player) => {
-    const cells = Array.from(gameBoard.querySelectorAll(".board-cell"));
-    const emptyCells = cells.filter(
-      (cell) =>
-        !cell.classList.contains("vertical-piece") &&
-        !cell.classList.contains("horizontal-piece"),
-    );
+  const getLegalMoves = (board, player) => {
+    const moves = [];
+    const rowStep = player === 0 ? 1 : 0;
+    const columnStep = player === 0 ? 0 : 1;
+    const lastRow = player === 0 ? BOARD_SIZE - 1 : BOARD_SIZE;
+    const lastColumn = player === 0 ? BOARD_SIZE : BOARD_SIZE - 1;
 
-    return emptyCells.some((firstCell) =>
-      emptyCells.some((secondCell) => {
-        if (firstCell === secondCell) {
-          return false;
-        }
+    for (let row = 0; row < lastRow; row += 1) {
+      for (let column = 0; column < lastColumn; column += 1) {
+        const firstIndex = row * BOARD_SIZE + column;
+        const secondIndex =
+          (row + rowStep) * BOARD_SIZE + column + columnStep;
 
-        const sameLine =
-          player === 0
-            ? firstCell.dataset.column === secondCell.dataset.column
-            : firstCell.dataset.row === secondCell.dataset.row;
-        const consecutivePositions =
-          player === 0
-            ? Math.abs(
-                Number(firstCell.dataset.row) -
-                  Number(secondCell.dataset.row),
-              ) === 1
-            : Math.abs(
-                Number(firstCell.dataset.column) -
-                  Number(secondCell.dataset.column),
-              ) === 1;
-
-        return sameLine && consecutivePositions;
-      }),
-    );
-  };
-
-  const findFirstLegalMove = (player) => {
-    const cells = Array.from(gameBoard.querySelectorAll(".board-cell"));
-    const emptyCells = cells.filter(
-      (cell) =>
-        !cell.classList.contains("vertical-piece") &&
-        !cell.classList.contains("horizontal-piece"),
-    );
-
-    for (const firstCell of emptyCells) {
-      for (const secondCell of emptyCells) {
-        if (firstCell === secondCell) {
-          continue;
-        }
-
-        const sameLine =
-          player === 0
-            ? firstCell.dataset.column === secondCell.dataset.column
-            : firstCell.dataset.row === secondCell.dataset.row;
-        const consecutivePositions =
-          player === 0
-            ? Math.abs(
-                Number(firstCell.dataset.row) -
-                  Number(secondCell.dataset.row),
-              ) === 1
-            : Math.abs(
-                Number(firstCell.dataset.column) -
-                  Number(secondCell.dataset.column),
-              ) === 1;
-
-        if (sameLine && consecutivePositions) {
-          return [firstCell, secondCell];
+        if (board[firstIndex] === null && board[secondIndex] === null) {
+          moves.push({ firstIndex, secondIndex });
         }
       }
     }
 
-    return null;
+    return moves;
+  };
+
+  const getBoardState = () =>
+    Array.from(gameBoard.querySelectorAll(".board-cell")).map((cell) => {
+      if (cell.classList.contains("vertical-piece")) {
+        return 0;
+      }
+      if (cell.classList.contains("horizontal-piece")) {
+        return 1;
+      }
+      return null;
+    });
+
+  const applyMove = (board, move, player) => {
+    const nextBoard = [...board];
+    nextBoard[move.firstIndex] = player;
+    nextBoard[move.secondIndex] = player;
+    return nextBoard;
+  };
+
+  const evaluateBoard = (board) =>
+    getLegalMoves(board, 1).length - getLegalMoves(board, 0).length;
+
+  const minimax = (board, player, depth, searchStats) => {
+    searchStats.checkedStates += 1;
+    const legalMoves = getLegalMoves(board, player);
+
+    if (legalMoves.length === 0) {
+      return player === 1 ? -COMPUTER_WIN_SCORE : COMPUTER_WIN_SCORE;
+    }
+
+    if (depth === 0) {
+      return evaluateBoard(board);
+    }
+
+    const scores = legalMoves.map((move) =>
+      minimax(applyMove(board, move, player), player === 1 ? 0 : 1, depth - 1, searchStats),
+    );
+
+    return player === 1 ? Math.max(...scores) : Math.min(...scores);
+  };
+
+  const chooseComputerMove = (board) => {
+    const searchStats = { checkedStates: 0 };
+    const startTime = performance.now();
+    const legalMoves = getLegalMoves(board, 1);
+    let bestMove = legalMoves[0];
+    let bestScore = -Infinity;
+
+    legalMoves.forEach((move) => {
+      const score = minimax(
+        applyMove(board, move, 1),
+        0,
+        MAX_SEARCH_DEPTH - 1,
+        searchStats,
+      );
+
+      if (score > bestScore) {
+        bestScore = score;
+        bestMove = move;
+      }
+    });
+
+    return {
+      move: bestMove,
+      checkedStates: searchStats.checkedStates,
+      elapsedMilliseconds: Math.round(performance.now() - startTime),
+    };
+  };
+
+  const hasLegalMove = (player) => {
+    return getLegalMoves(getBoardState(), player).length > 0;
   };
 
   const markPiece = (cells, pieceClass, pieceLetter) => {
@@ -112,18 +137,27 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const makeComputerMove = () => {
     computerThinking = false;
-    const computerMove = findFirstLegalMove(1);
+    const searchResult = chooseComputerMove(getBoardState());
+    const computerMove = searchResult.move;
 
     if (!computerMove) {
       endGameIfNeeded();
       return;
     }
 
-    markPiece(computerMove, "horizontal-piece", "H");
-    const row = Number(computerMove[0].dataset.row) + 1;
-    const firstColumn = Number(computerMove[0].dataset.column) + 1;
-    const secondColumn = Number(computerMove[1].dataset.column) + 1;
-    gameMessage.textContent = `Computer placed H at row ${row}, columns ${firstColumn}-${secondColumn}.`;
+    const cells = gameBoard.querySelectorAll(".board-cell");
+    markPiece(
+      [cells[computerMove.firstIndex], cells[computerMove.secondIndex]],
+      "horizontal-piece",
+      "H",
+    );
+    const row = Math.floor(computerMove.firstIndex / BOARD_SIZE) + 1;
+    const firstColumn = (computerMove.firstIndex % BOARD_SIZE) + 1;
+    const secondColumn = (computerMove.secondIndex % BOARD_SIZE) + 1;
+    gameMessage.textContent =
+      `Computer placed H at row ${row}, columns ${firstColumn}-${secondColumn}. ` +
+      `Search depth: ${MAX_SEARCH_DEPTH}; states checked: ${searchResult.checkedStates}; ` +
+      `time: ${searchResult.elapsedMilliseconds} ms.`;
     currentPlayer = 0;
     setStatusForPlayer();
     endGameIfNeeded();

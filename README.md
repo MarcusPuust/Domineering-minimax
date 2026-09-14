@@ -1,8 +1,8 @@
 # Domineering Minimax
 
 This school project is a Domineering game on a 4 by 4 board. Player 0 is
-controlled by the human, and Player 1 is controlled by a simple computer
-opponent that currently chooses the first legal move it finds.
+controlled by the human, and Player 1 is controlled by a depth-limited minimax
+computer opponent.
 
 ## Current features
 
@@ -12,8 +12,9 @@ opponent that currently chooses the first legal move it finds.
 - Legal move validation for both players.
 - Win detection when the next player has no legal move.
 - A New Game button.
-- Automatic computer moves for Player 1.
-- No minimax or alpha-beta pruning yet.
+- Automatic computer moves for Player 1 using minimax with search depth 5.
+- Search depth, checked states, and elapsed time shown after computer moves.
+- No alpha-beta pruning yet.
 
 ## Files
 
@@ -33,9 +34,8 @@ python3 -m http.server 8000
 ```
 
 Then open http://localhost:8000. Click two cells to place a piece according
-to place Player 0's vertical piece. The computer then briefly thinks and
-places the first legal horizontal piece it finds. Select **New Game** to reset
-the board.
+to place Player 0's vertical piece. The computer then briefly thinks and chooses a move using
+minimax. Select **New Game** to reset the board.
 
 ## GitHub repository
 
@@ -97,3 +97,13 @@ https://github.com/MarcusPuust/Domineering-minimax
 - **Files:** `script.js` and `README.md`.
 - **Testing:** Tested the computer move message and played a complete game to a
   winner.
+
+### Prompt 7: Replace the first legal move with minimax
+
+- **Result:** Replaced the computer's first-legal-move strategy with minimax
+  using a maximum search depth of 5, terminal win/loss scores, and mobility
+  evaluation.
+- **Files:** `script.js` and `README.md`.
+- **Testing:** Played a complete human-versus-computer game and verified that
+  every computer move reports its search depth, checked states, and elapsed
+  time.
