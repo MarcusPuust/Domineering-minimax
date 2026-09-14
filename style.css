@@ -115,3 +115,11 @@ body {
   font-size: 1.5rem;
   font-weight: 700;
 }
+
+.board-cell.horizontal-piece {
+  background: #f97316;
+  color: #ffffff;
+  cursor: default;
+  font-size: 1.5rem;
+  font-weight: 700;
+}

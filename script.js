@@ -1,5 +1,5 @@
-// This file creates the empty 4 by 4 board.
-// Move rules, win detection, and AI will be added in later steps.
+// This file creates the board and handles the two players' basic move rules.
+// Win detection and AI will be added in later steps.
 
 document.addEventListener("DOMContentLoaded", () => {
   const pageTitle = document.querySelector(".page-title");
@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const gameMessage = document.querySelector("#game-message");
   const gameBoard = document.querySelector("#game-board");
   const selectedCells = [];
-  let playerZeroMoveCompleted = false;
+  let currentPlayer = 0;
 
   if (pageTitle) {
     pageTitle.textContent = "Domineering Minimax";
@@ -25,7 +25,10 @@ document.addEventListener("DOMContentLoaded", () => {
       cell.dataset.column = String(cellNumber % 4);
 
       cell.addEventListener("click", () => {
-        if (playerZeroMoveCompleted || cell.classList.contains("vertical-piece")) {
+        if (
+          cell.classList.contains("vertical-piece") ||
+          cell.classList.contains("horizontal-piece")
+        ) {
           return;
         }
 
@@ -43,30 +46,45 @@ document.addEventListener("DOMContentLoaded", () => {
         if (selectedCells.length === 2) {
           const firstCell = selectedCells[0];
           const secondCell = selectedCells[1];
-          const sameColumn =
-            firstCell.dataset.column === secondCell.dataset.column;
-          const consecutiveRows =
-            Math.abs(
-              Number(firstCell.dataset.row) - Number(secondCell.dataset.row),
-            ) === 1;
+          const sameLine =
+            currentPlayer === 0
+              ? firstCell.dataset.column === secondCell.dataset.column
+              : firstCell.dataset.row === secondCell.dataset.row;
+          const consecutivePositions =
+            currentPlayer === 0
+              ? Math.abs(
+                  Number(firstCell.dataset.row) -
+                    Number(secondCell.dataset.row),
+                ) === 1
+              : Math.abs(
+                  Number(firstCell.dataset.column) -
+                    Number(secondCell.dataset.column),
+                ) === 1;
 
-          if (sameColumn && consecutiveRows) {
+          if (sameLine && consecutivePositions) {
+            const pieceClass =
+              currentPlayer === 0 ? "vertical-piece" : "horizontal-piece";
+            const pieceLetter = currentPlayer === 0 ? "V" : "H";
+
             selectedCells.forEach((selectedCell) => {
               selectedCell.classList.remove("selected");
-              selectedCell.classList.add("vertical-piece");
-              selectedCell.textContent = "V";
+              selectedCell.classList.add(pieceClass);
+              selectedCell.textContent = pieceLetter;
               selectedCell.disabled = true;
             });
 
-            playerZeroMoveCompleted = true;
-            gameStatus.textContent = "Player 1’s turn.";
+            selectedCells.length = 0;
+            currentPlayer = currentPlayer === 0 ? 1 : 0;
+            gameStatus.textContent = `Player ${currentPlayer}’s turn.`;
           } else {
             selectedCells.forEach((selectedCell) =>
               selectedCell.classList.remove("selected"),
             );
             selectedCells.length = 0;
             gameMessage.textContent =
-              "Choose two empty cells in one column next to each other.";
+              currentPlayer === 0
+                ? "Player 0 needs two cells in one column next to each other."
+                : "Player 1 needs two cells in one row next to each other.";
           }
         }
       });
