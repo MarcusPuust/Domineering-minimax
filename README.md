@@ -76,8 +76,8 @@ Tulemused sõltuvad brauserist ja arvutist. Sama algse mänguseisu ja sügavuse
 
 | Meetod | Otsingu sügavus | Kontrollitud seisud | Aeg |
 |---|---:|---:|---:|
-| Minimax | 5 | `[täida siia]` | `[täida siia] ms` |
-| Minimax koos alfa-beeta kärpimisega | 5 | `[täida siia]` | `[täida siia] ms` |
+| Minimax | 5 | 4107 | 4 ms |
+| Minimax koos alfa-beeta kärpimisega | 5 | 1346 | 2 ms |
 
 Alfa-beeta kärpimise eelis on tavaliselt väiksem kontrollitud seisude arv,
 sest mittevajalikud otsinguharud jäetakse läbi vaatamata.
@@ -208,3 +208,22 @@ https://github.com/MarcusPuust/Domineering-minimax
   toimimist.
 - **Parandatud probleem:** Konfeti jaoks lisati lühike ajapiirang ja
   `pointer-events: none`, et animatsioon ei segaks **Play Again** nuppu.
+
+### 11. Täielik mängu testimine
+
+- **Kasutaja ülesanne:** Kontrolli kehtivaid ja vigaseid inimkäike, arvuti
+  automaatseid käike, võidutuvastust, mõlemat lähtestusnuppu, mõlemat otsingumeetodit
+  ning jõudlusmõõdikute kuvamist. Paranda ainult selged vead ja lisa üks
+  jõudlustulemus kummagi meetodi kohta.
+- **Tulemus:** Täielik testimine läbis kõik kontrollid. Vigane horisontaalne
+  valik lükati inimese käiguna tagasi, kehtiv vertikaalne käik käivitas arvuti
+  automaatse horisontaalse käigu ning mõlemad meetodid näitasid sügavust 5,
+  kontrollitud seisude arvu ja aega.
+- **Testitud võidud ja lähtestamised:** Kontrolliti arvuti võitu, inimese võitu,
+  **Play Again** nuppu ja **New Game** nuppu. Mõlema võidu korral ilmus õige
+  ülekate; inimese võidu korral ilmus konfetti ja see eemaldus automaatselt.
+- **Jõudlustulemus samast algseisust:** Tavaline minimax kontrollis 4107 seisundit
+  4 ms jooksul. Alfa-beeta kärpimine kontrollis 1346 seisundit 2 ms jooksul.
+  Mõlemad valisid sama käigu sügavusel 5.
+- **Muudetud failid:** `README.md`.
+- **Parandatud probleem:** Testimise käigus selget mängukoodi viga ei leitud.
