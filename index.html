@@ -24,17 +24,26 @@
       </header>
 
       <section class="game-area" aria-label="Domineering game board">
+        <div class="game-controls">
+          <label class="game-control" for="search-mode">
+            <span>Computer search</span>
+            <select id="search-mode">
+              <option value="minimax">Minimax</option>
+              <option value="alpha-beta">Minimax with alpha-beta pruning</option>
+            </select>
+          </label>
+          <label class="game-control" for="human-direction">
+            <span>Your pieces</span>
+            <select id="human-direction">
+              <option value="vertical">Vertical</option>
+              <option value="horizontal">Horizontal</option>
+            </select>
+          </label>
+        </div>
         <p class="game-status" id="game-status">
           Player 0&rsquo;s turn: place a vertical piece.
         </p>
         <p class="game-message" id="game-message" aria-live="polite"></p>
-        <label class="search-mode-label" for="search-mode">
-          Computer search:
-          <select id="search-mode">
-            <option value="minimax">Minimax</option>
-            <option value="alpha-beta">Minimax with alpha-beta pruning</option>
-          </select>
-        </label>
         <div class="game-board-container">
           <div
             class="game-board"

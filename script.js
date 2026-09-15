@@ -14,7 +14,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const winnerTitle = document.querySelector("#winner-title");
   const playAgainButton = document.querySelector("#play-again-button");
   const searchMode = document.querySelector("#search-mode");
+  const humanDirectionSelect = document.querySelector("#human-direction");
   const selectedCells = [];
+  let humanDirection = humanDirectionSelect.value;
+  let computerDirection = humanDirection === "vertical" ? "horizontal" : "vertical";
   let currentPlayer = 0;
   let gameOver = false;
   let computerThinking = false;
@@ -22,16 +25,26 @@ document.addEventListener("DOMContentLoaded", () => {
   let confettiTimer;
 
   const setStatusForPlayer = () => {
-    const pieceDirection = currentPlayer === 0 ? "vertical" : "horizontal";
+    const pieceDirection =
+      currentPlayer === 0 ? humanDirection : computerDirection;
     gameStatus.textContent = `Player ${currentPlayer}’s turn: place a ${pieceDirection} piece.`;
   };
 
+  humanDirectionSelect.addEventListener("change", () => {
+    humanDirection = humanDirectionSelect.value;
+    computerDirection =
+      humanDirection === "vertical" ? "horizontal" : "vertical";
+    setStatusForPlayer();
+  });
+
   const getLegalMoves = (board, player) => {
     const moves = [];
-    const rowStep = player === 0 ? 1 : 0;
-    const columnStep = player === 0 ? 0 : 1;
-    const lastRow = player === 0 ? BOARD_SIZE - 1 : BOARD_SIZE;
-    const lastColumn = player === 0 ? BOARD_SIZE : BOARD_SIZE - 1;
+    const direction = player === 0 ? humanDirection : computerDirection;
+    const isVertical = direction === "vertical";
+    const rowStep = isVertical ? 1 : 0;
+    const columnStep = isVertical ? 0 : 1;
+    const lastRow = isVertical ? BOARD_SIZE - 1 : BOARD_SIZE;
+    const lastColumn = isVertical ? BOARD_SIZE : BOARD_SIZE - 1;
 
     for (let row = 0; row < lastRow; row += 1) {
       for (let column = 0; column < lastColumn; column += 1) {
@@ -256,19 +269,31 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const cells = gameBoard.querySelectorAll(".board-cell");
+    const firstCell = cells[computerMove.firstIndex];
+    const secondCell = cells[computerMove.secondIndex];
+    const pieceLetter = computerDirection === "vertical" ? "V" : "H";
+    const pieceClass =
+      computerDirection === "vertical"
+        ? "vertical-piece"
+        : "horizontal-piece";
     markPiece(
-      [cells[computerMove.firstIndex], cells[computerMove.secondIndex]],
-      "horizontal-piece",
-      "H",
+      [firstCell, secondCell],
+      pieceClass,
+      pieceLetter,
     );
-    const row = Math.floor(computerMove.firstIndex / BOARD_SIZE) + 1;
+    const firstRow = Math.floor(computerMove.firstIndex / BOARD_SIZE) + 1;
+    const secondRow = Math.floor(computerMove.secondIndex / BOARD_SIZE) + 1;
     const firstColumn = (computerMove.firstIndex % BOARD_SIZE) + 1;
     const secondColumn = (computerMove.secondIndex % BOARD_SIZE) + 1;
+    const moveDescription =
+      computerDirection === "vertical"
+        ? `column ${firstColumn}, rows ${firstRow}-${secondRow}`
+        : `row ${firstRow}, columns ${firstColumn}-${secondColumn}`;
     const estimatedMemoryKilobytes = (
       searchResult.estimatedMemoryBytes / 1024
     ).toFixed(1);
     gameMessage.textContent =
-      `Computer placed H at row ${row}, columns ${firstColumn}-${secondColumn}. ` +
+      `Computer placed ${pieceLetter} at ${moveDescription}. ` +
       `${searchResult.mode}; search depth: ${MAX_SEARCH_DEPTH}; ` +
       `states checked: ${searchResult.checkedStates}; ` +
       `estimated state data: ${estimatedMemoryKilobytes} KB; ` +
@@ -319,12 +344,15 @@ document.addEventListener("DOMContentLoaded", () => {
         if (selectedCells.length === 2) {
           const firstCell = selectedCells[0];
           const secondCell = selectedCells[1];
+          const selectedDirection =
+            currentPlayer === 0 ? humanDirection : computerDirection;
+          const selectedPieceIsVertical = selectedDirection === "vertical";
           const sameLine =
-            currentPlayer === 0
+            selectedPieceIsVertical
               ? firstCell.dataset.column === secondCell.dataset.column
               : firstCell.dataset.row === secondCell.dataset.row;
           const consecutivePositions =
-            currentPlayer === 0
+            selectedPieceIsVertical
               ? Math.abs(
                   Number(firstCell.dataset.row) -
                     Number(secondCell.dataset.row),
@@ -335,9 +363,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 ) === 1;
 
           if (sameLine && consecutivePositions) {
+            const pieceDirection =
+              currentPlayer === 0 ? humanDirection : computerDirection;
             const pieceClass =
-              currentPlayer === 0 ? "vertical-piece" : "horizontal-piece";
-            const pieceLetter = currentPlayer === 0 ? "V" : "H";
+              pieceDirection === "vertical"
+                ? "vertical-piece"
+                : "horizontal-piece";
+            const pieceLetter = pieceDirection === "vertical" ? "V" : "H";
 
             selectedCells.forEach((selectedCell) => {
               selectedCell.classList.remove("selected");
@@ -347,6 +379,7 @@ document.addEventListener("DOMContentLoaded", () => {
             });
 
             selectedCells.length = 0;
+            humanDirectionSelect.disabled = true;
             currentPlayer = 1;
 
             if (!hasLegalMove(currentPlayer)) {
@@ -364,9 +397,9 @@ document.addEventListener("DOMContentLoaded", () => {
             );
             selectedCells.length = 0;
             gameMessage.textContent =
-              currentPlayer === 0
-                ? "Player 0 needs two cells in one column next to each other."
-                : "Player 1 needs two cells in one row next to each other.";
+              selectedPieceIsVertical
+                ? "Choose two cells in one column next to each other."
+                : "Choose two cells in one row next to each other.";
           }
         }
       });
@@ -386,6 +419,10 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     selectedCells.length = 0;
+    humanDirection = humanDirectionSelect.value;
+    computerDirection =
+      humanDirection === "vertical" ? "horizontal" : "vertical";
+    humanDirectionSelect.disabled = false;
     currentPlayer = 0;
     gameOver = false;
     computerThinking = false;

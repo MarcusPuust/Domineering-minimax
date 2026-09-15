@@ -14,9 +14,10 @@ Mängu saab avada otse brauseris:
 2. Vali rippmenüüst arvuti otsingumeetod:
    - **Minimax**
    - **Minimax koos alfa-beeta kärpimisega**
-3. Klõpsa kahel järjestikusel vabal lahtril samas veerus, et teha mängija 0
-   vertikaalne käik.
-4. Arvuti mõtleb hetke ja teeb mängija 1 horisontaalse käigu.
+3. Vali enne esimest käiku, kas sinu klotsid on vertikaalsed või
+   horisontaalsed. Arvuti kasutab vastassuunda.
+4. Klõpsa kahel sobival järjestikusel vabal lahtril, et teha oma käik.
+5. Arvuti mõtleb hetke ja teeb vastassuunalise käigu.
 5. Arvuti käigu järel kuvatakse valitud käik, otsingu sügavus, kontrollitud
    mänguseisude arv, hinnanguline olekuandmete maht ja kulunud aeg
    millisekundites.
@@ -38,8 +39,9 @@ ehitusprotsessi ega serveripoolset koodi.
 ## Domineeringu reeglid
 
 - Mängulaud on 4 × 4 ehk sellel on 16 lahtrit.
-- Mängija 0 on inimene ja asetab vertikaalseid 1 × 2 nuppe.
-- Mängija 1 on arvuti ja asetab horisontaalseid 1 × 2 nuppe.
+- Mängija 0 on inimene ja asetab valitud suunaga 1 × 2 nuppe.
+- Mängija 1 on arvuti ja asetab inimese valitud suunale vastassuunalisi
+  1 × 2 nuppe.
 - Vertikaalne nupp katab kaks järjestikust vaba lahtrit samas veerus.
 - Horisontaalne nupp katab kaks järjestikust vaba lahtrit samas reas.
 - Nuppu ei saa asetada hõivatud lahtritele.
@@ -267,7 +269,7 @@ https://marcuspuust.github.io/Domineering-minimax/
 - **Muudetud failid:** `README.md`.
 - **Parandatud probleem:** Testimise käigus selget mängukoodi viga ei leitud.
 
-### 14. Hinnangulise mälu näitaja lisamine
+### 12. Hinnangulise mälu näitaja lisamine
 
 - **Kasutatud viip:** „Lisa projektile hinnanguline otsingu mälu mõõdik, sest
   täpset brauseri RAM-i kasutust ei saa usaldusväärselt mõõta.”
@@ -280,7 +282,19 @@ https://marcuspuust.github.io/Domineering-minimax/
 - **Parandatud probleem:** Täpse RAM-i mõõtmise asemel dokumenteeriti ausalt
   lihtsustatud hinnang ja selle piirangud.
 
-### 12. Lõpetatud mängu dokumenteerimine
+### 13. Inimese klotsi suuna valimine
+
+- **Kasutatud viip:** „Lisa enne mängu valik, kas inimene soovib paigutada
+  horisontaalseid või vertikaalseid klotse.”
+- **Tulemus:** Enne esimest käiku saab valida inimese klotsi suuna. Arvuti
+  kasutab automaatselt vastassuunda ning valik lukustub mängu ajaks.
+- **Muudetud failid:** `index.html`, `style.css`, `script.js`, `README.md`.
+- **Testimine:** Kontrolliti mõlemat suunavalikut, automaatset vastassuunalist
+  arvuti käiku ja mängu lähtestamist.
+- **Parandatud probleem:** README päeviku etapid olid järjestamata: etapp 14
+  paiknes enne etappi 12 ja 13. Nummerdus on nüüd järjestikune.
+
+### 14. Lõpetatud mängu dokumenteerimine
 
 - **Kasutatud viip:** „Update README.md in Estonian to reflect the completed
   game. Include game setup, Domineeringu reeglid, 4 × 4 laud, inimese ja
@@ -295,7 +309,7 @@ https://marcuspuust.github.io/Domineering-minimax/
   et inimene kasutab vertikaalseid ja arvuti horisontaalseid klotse, ega
   sisaldanud eraldi GitHub Pagesi lingi kohta.
 
-### 13. GitHub Pagesis avaldamine
+### 15. GitHub Pagesis avaldamine
 
 - **Kasutatud viip:** „Tahan avaldada GitHub Pages näol. Kontrolli, et
   README oleks ajakohane ja avalik mäng töötaks.”
