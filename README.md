@@ -18,7 +18,8 @@ Mängu saab avada otse brauseris:
    vertikaalne käik.
 4. Arvuti mõtleb hetke ja teeb mängija 1 horisontaalse käigu.
 5. Arvuti käigu järel kuvatakse valitud käik, otsingu sügavus, kontrollitud
-   mänguseisude arv ja kulunud aeg millisekundites.
+   mänguseisude arv, hinnanguline olekuandmete maht ja kulunud aeg
+   millisekundites.
 6. Uue mängu alustamiseks vajuta nuppu **New Game** või mängu lõpus nuppu
    **Play Again**. Võidu korral kuvatakse mängulaua kohal võitja ülekate.
    Inimese võidu korral mängib lühikest aega konfetti.
@@ -91,13 +92,28 @@ tavalist minimaxi ja alfa-beeta kärpimisega minimaxi.
 Tulemused sõltuvad brauserist ja arvutist. Sama algse mänguseisu ja sügavuse
 5 korral võib tulemused märkida näiteks järgmiselt:
 
-| Meetod | Otsingu sügavus | Kontrollitud seisud | Aeg |
-|---|---:|---:|---:|
-| Minimax | 5 | 4107 | 4 ms |
-| Minimax koos alfa-beeta kärpimisega | 5 | 1346 | 2 ms |
+| Meetod | Otsingu sügavus | Kontrollitud seisud | Hinnanguline olekuandmed | Aeg |
+|---|---:|---:|---:|---:|
+| Minimax | 5 | 4107 | 64.2 KB | 4 ms |
+| Minimax koos alfa-beeta kärpimisega | 5 | 1346 | 21.0 KB | 2 ms |
 
 Alfa-beeta kärpimise eelis on tavaliselt väiksem kontrollitud seisude arv,
 sest mittevajalikud otsinguharud jäetakse läbi vaatamata.
+
+### Hinnanguline mälu
+
+Brauser ei anna selle staatilise lehe jaoks usaldusväärset ja üheselt
+võrreldavat täpse RAM-i kasutuse mõõdikut. Seetõttu kuvab mäng arvuti käigu
+järel hinnangulise otsingu olekuandmete mahu:
+
+```text
+kontrollitud seisud × 16 lahtrit × 1 bait
+```
+
+See on 4 × 4 laua andmete lihtsustatud hinnang, mitte JavaScripti heap'i täpne
+RAM-i kasutus. Tegelik mälu sõltub brauserist ja JavaScripti mootorist ning
+objektide, massiivide ja ajutiste andmete lisakulust. Näiteks 4107 kontrollitud
+seisu korral on hinnanguline olekuandmete maht 64.2 KB.
 
 ## Failid
 
@@ -241,7 +257,7 @@ https://marcuspuust.github.io/Domineering-minimax/
 - **Tulemus:** Täielik testimine läbis kõik kontrollid. Vigane horisontaalne
   valik lükati inimese käiguna tagasi, kehtiv vertikaalne käik käivitas arvuti
   automaatse horisontaalse käigu ning mõlemad meetodid näitasid sügavust 5,
-  kontrollitud seisude arvu ja aega.
+  kontrollitud seisude arvu, hinnangulist olekuandmete mahtu ja aega.
 - **Testitud võidud ja lähtestamised:** Kontrolliti arvuti võitu, inimese võitu,
   **Play Again** nuppu ja **New Game** nuppu. Mõlema võidu korral ilmus õige
   ülekate; inimese võidu korral ilmus konfetti ja see eemaldus automaatselt.
@@ -250,6 +266,19 @@ https://marcuspuust.github.io/Domineering-minimax/
   Mõlemad valisid sama käigu sügavusel 5.
 - **Muudetud failid:** `README.md`.
 - **Parandatud probleem:** Testimise käigus selget mängukoodi viga ei leitud.
+
+### 14. Hinnangulise mälu näitaja lisamine
+
+- **Kasutatud viip:** „Lisa projektile hinnanguline otsingu mälu mõõdik, sest
+  täpset brauseri RAM-i kasutust ei saa usaldusväärselt mõõta.”
+- **Tulemus:** Arvuti käigu sõnum sisaldab nüüd hinnangulist olekuandmete mahtu
+  kilobaitides. Hinnang põhineb kontrollitud seisude arvul ja 16 lahtriga
+  mängulaual.
+- **Muudetud failid:** `script.js`, `README.md`.
+- **Testimine:** Kontrolliti, et arvuti käigu sõnum sisaldab otsingu sügavust,
+  kontrollitud seisude arvu, hinnangulist mälu ja aega.
+- **Parandatud probleem:** Täpse RAM-i mõõtmise asemel dokumenteeriti ausalt
+  lihtsustatud hinnang ja selle piirangud.
 
 ### 12. Lõpetatud mängu dokumenteerimine
 

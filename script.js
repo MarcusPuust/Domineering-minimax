@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const BOARD_SIZE = 4;
   const MAX_SEARCH_DEPTH = 5;
   const COMPUTER_WIN_SCORE = 100000;
+  const ESTIMATED_BYTES_PER_CELL = 1;
   const pageTitle = document.querySelector(".page-title");
   const gameStatus = document.querySelector("#game-status");
   const gameMessage = document.querySelector("#game-message");
@@ -182,6 +183,11 @@ document.addEventListener("DOMContentLoaded", () => {
       move: bestMove,
       mode: useAlphaBeta ? "Minimax with alpha-beta pruning" : "Minimax",
       checkedStates: searchStats.checkedStates,
+      estimatedMemoryBytes:
+        searchStats.checkedStates *
+        BOARD_SIZE *
+        BOARD_SIZE *
+        ESTIMATED_BYTES_PER_CELL,
       elapsedMilliseconds: Math.round(performance.now() - startTime),
     };
   };
@@ -258,10 +264,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const row = Math.floor(computerMove.firstIndex / BOARD_SIZE) + 1;
     const firstColumn = (computerMove.firstIndex % BOARD_SIZE) + 1;
     const secondColumn = (computerMove.secondIndex % BOARD_SIZE) + 1;
+    const estimatedMemoryKilobytes = (
+      searchResult.estimatedMemoryBytes / 1024
+    ).toFixed(1);
     gameMessage.textContent =
       `Computer placed H at row ${row}, columns ${firstColumn}-${secondColumn}. ` +
       `${searchResult.mode}; search depth: ${MAX_SEARCH_DEPTH}; ` +
       `states checked: ${searchResult.checkedStates}; ` +
+      `estimated state data: ${estimatedMemoryKilobytes} KB; ` +
       `time: ${searchResult.elapsedMilliseconds} ms.`;
     currentPlayer = 0;
     setStatusForPlayer();
