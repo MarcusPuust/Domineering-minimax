@@ -25,20 +25,38 @@
 
       <section class="game-area" aria-label="Domineering game board">
         <div class="game-controls">
-          <label class="game-control" for="search-mode">
-            <span>Computer search</span>
-            <select id="search-mode">
-              <option value="minimax">Minimax</option>
-              <option value="alpha-beta">Minimax with alpha-beta pruning</option>
-            </select>
-          </label>
-          <label class="game-control" for="human-direction">
-            <span>Your pieces</span>
-            <select id="human-direction">
-              <option value="vertical">Vertical</option>
-              <option value="horizontal">Horizontal</option>
-            </select>
-          </label>
+          <fieldset class="game-control">
+            <legend>Computer search</legend>
+            <label class="radio-option">
+              <input
+                type="radio"
+                name="search-mode"
+                value="minimax"
+                checked
+              />
+              <span>Minimax</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="search-mode" value="alpha-beta" />
+              <span>Minimax with alpha-beta pruning</span>
+            </label>
+          </fieldset>
+          <fieldset class="game-control">
+            <legend>Your pieces</legend>
+            <label class="radio-option">
+              <input
+                type="radio"
+                name="human-direction"
+                value="vertical"
+                checked
+              />
+              <span>Vertical</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="human-direction" value="horizontal" />
+              <span>Horizontal</span>
+            </label>
+          </fieldset>
         </div>
         <p class="game-status" id="game-status">
           Player 0&rsquo;s turn: place a vertical piece.

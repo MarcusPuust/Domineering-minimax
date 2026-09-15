@@ -13,11 +13,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const winnerOverlay = document.querySelector("#winner-overlay");
   const winnerTitle = document.querySelector("#winner-title");
   const playAgainButton = document.querySelector("#play-again-button");
-  const searchMode = document.querySelector("#search-mode");
-  const humanDirectionSelect = document.querySelector("#human-direction");
+  const searchModeInputs = document.querySelectorAll(
+    'input[name="search-mode"]',
+  );
+  const humanDirectionInputs = document.querySelectorAll(
+    'input[name="human-direction"]',
+  );
   const selectedCells = [];
-  let humanDirection = humanDirectionSelect.value;
-  let computerDirection = humanDirection === "vertical" ? "horizontal" : "vertical";
   let currentPlayer = 0;
   let gameOver = false;
   let computerThinking = false;
@@ -30,12 +32,39 @@ document.addEventListener("DOMContentLoaded", () => {
     gameStatus.textContent = `Player ${currentPlayer}’s turn: place a ${pieceDirection} piece.`;
   };
 
-  humanDirectionSelect.addEventListener("change", () => {
-    humanDirection = humanDirectionSelect.value;
-    computerDirection =
-      humanDirection === "vertical" ? "horizontal" : "vertical";
-    setStatusForPlayer();
+  const getSelectedValue = (inputs) =>
+    Array.from(inputs).find((input) => input.checked).value;
+
+  let humanDirection = getSelectedValue(humanDirectionInputs);
+  let computerDirection =
+    humanDirection === "vertical" ? "horizontal" : "vertical";
+
+  humanDirectionInputs.forEach((input) => {
+    input.addEventListener("change", () => {
+      humanDirection = getSelectedValue(humanDirectionInputs);
+      computerDirection =
+        humanDirection === "vertical" ? "horizontal" : "vertical";
+      setStatusForPlayer();
+    });
   });
+
+  const getSearchMode = () => getSelectedValue(searchModeInputs);
+
+  searchModeInputs.forEach((input) => {
+    input.addEventListener("change", () => {
+      gameMessage.textContent = "";
+    });
+  });
+
+  /*
+   * The direction choice is locked after the first move, but the search
+   * method can still be changed between computer turns.
+   */
+  const disableDirectionInputs = (disabled) => {
+    humanDirectionInputs.forEach((input) => {
+      input.disabled = disabled;
+    });
+  };
 
   const getLegalMoves = (board, player) => {
     const moves = [];
@@ -169,7 +198,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const searchStats = { checkedStates: 0 };
     const startTime = performance.now();
     const legalMoves = getLegalMoves(board, 1);
-    const useAlphaBeta = searchMode.value === "alpha-beta";
+    const useAlphaBeta = getSearchMode() === "alpha-beta";
     let bestMove = legalMoves[0];
     let bestScore = -Infinity;
 
@@ -379,7 +408,7 @@ document.addEventListener("DOMContentLoaded", () => {
             });
 
             selectedCells.length = 0;
-            humanDirectionSelect.disabled = true;
+            disableDirectionInputs(true);
             currentPlayer = 1;
 
             if (!hasLegalMove(currentPlayer)) {
@@ -419,10 +448,10 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     selectedCells.length = 0;
-    humanDirection = humanDirectionSelect.value;
+    humanDirection = getSelectedValue(humanDirectionInputs);
     computerDirection =
       humanDirection === "vertical" ? "horizontal" : "vertical";
-    humanDirectionSelect.disabled = false;
+    disableDirectionInputs(false);
     currentPlayer = 0;
     gameOver = false;
     computerThinking = false;

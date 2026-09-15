@@ -322,3 +322,15 @@ https://marcuspuust.github.io/Domineering-minimax/
 - **Parandatud probleem:** Esimene Pagesi töövoog vajati GitHubi Pagesi
   seadistuse aktiveerimist. Pärast **Settings → Pages → GitHub Actions**
   valimist avaldus leht õigel URL-il.
+
+### 16. Valikute muutmine raadionuppudeks
+
+- **Kasutatud viip:** „Muuda otsingumeetodi ja klotsisuuna rippmenüüd
+  raadionuppudeks ning sobita need paremini kujundusega.”
+- **Tulemus:** Otsingumeetodi ja inimese klotsisuuna valikud kuvatakse nüüd
+  selgete raadionuppude rühmadena.
+- **Muudetud failid:** `index.html`, `style.css`, `script.js`, `README.md`.
+- **Testimine:** Kontrolliti, et mõlemad raadionupurühmad kuvatakse, otsingumeetod
+  valitakse õigesti ning vertikaalne ja horisontaalne mängusuund töötavad.
+- **Parandatud probleem:** Rippmenüüde vana JavaScripti viited asendati valitud
+  raadionupu väärtuse lugemisega.

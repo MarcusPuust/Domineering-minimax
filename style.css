@@ -83,33 +83,68 @@ body {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.75rem;
   margin-bottom: 1.25rem;
-  padding: 0.75rem;
-  border: 1px solid #dbeafe;
-  border-radius: 10px;
-  background: #f8fbff;
 }
 
 .game-control {
-  display: grid;
-  gap: 0.35rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: 0.4rem;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
   color: var(--muted);
   font-size: 0.8rem;
   font-weight: 700;
   text-align: left;
 }
 
-.game-control select {
-  border: 1px solid #cbd5e1;
-  border-radius: 5px;
-  padding: 0.5rem;
-  color: var(--text);
-  font: inherit;
-  background: #ffffff;
+.game-control legend {
+  flex-basis: 100%;
+  padding: 0;
+  margin-bottom: 0.1rem;
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 700;
 }
 
-.game-control select:focus-visible {
+.radio-option {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 0.45rem;
+  min-height: 2.15rem;
+  padding: 0.45rem 0.65rem;
+  border: 1px solid #dbeafe;
+  border-radius: 6px;
+  background: #f8fbff;
+  color: var(--text);
+  font-size: 0.85rem;
+  font-weight: 400;
+  line-height: 1.25;
+  cursor: pointer;
+}
+
+.radio-option:hover {
+  border-color: #93c5fd;
+  background: #eff6ff;
+}
+
+.radio-option:has(input:checked) {
+  border-color: #60a5fa;
+  background: #dbeafe;
+  color: #1e3a8a;
+}
+
+.radio-option input {
+  flex: 0 0 auto;
+  margin: 0.1rem 0 0;
+  accent-color: var(--accent);
+}
+
+.radio-option input:focus-visible {
   outline: 3px solid #93c5fd;
-  outline-offset: 1px;
+  outline-offset: 2px;
 }
 
 .game-board-container {
